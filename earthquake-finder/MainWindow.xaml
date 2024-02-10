@@ -4,9 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:earthquake_finder"
+        xmlns:userControls="clr-namespace:earthquake_finder.View.UserControls"
         mc:Ignorable="d"
         Title="Earthquake finder" Height="450" Width="800">
     <Grid>
-        <TextBlock>Hello world</TextBlock>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="80"/>
+        </Grid.RowDefinitions>
+
+        <userControls:ButtonPanel Grid.Row="1" />
     </Grid>
 </Window>

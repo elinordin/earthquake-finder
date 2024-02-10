@@ -8,5 +8,10 @@ namespace earthquake_finder
         {
             InitializeComponent();
         }
+
+        private void ButtonPanel_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
