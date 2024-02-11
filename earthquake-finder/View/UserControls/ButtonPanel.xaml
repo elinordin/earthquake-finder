@@ -15,14 +15,14 @@
         </Grid.ColumnDefinitions>
 
         <Grid.Resources>
-            <Style TargetType="userControls:FilterButton">
-                <Setter Property="Margin" Value="5"/>
+            <Style TargetType="Grid">
+                <Setter Property="Margin" Value="10"/>
             </Style>
         </Grid.Resources>
 
-        <userControls:FilterButton Grid.Column="0" Label="Past hour"/>
-        <userControls:FilterButton Grid.Column="1" Label="Past day"/>
-        <userControls:FilterButton Grid.Column="2" Label="Past week"/>
-        <userControls:FilterButton Grid.Column="3" Label="Past month"/>
+        <Button Grid.Column="0" Content="Past hour" Style="{StaticResource SelectedButton}"/>
+        <Button Grid.Column="1" Content="Past day"/>
+        <Button Grid.Column="2" Content="Past week"/>
+        <Button Grid.Column="3" Content="Past month"/>
     </Grid>
 </UserControl>
