@@ -8,10 +8,8 @@ namespace earthquake_finder.View.UserControls
         {
             InitializeComponent();
 
-            var mapControl = new Mapsui.UI.Wpf.MapControl();
-            mapControl.Map?.Layers.Add(Mapsui.Tiling.OpenStreetMap.CreateTileLayer());
-
-            Content = mapControl;
+            mapsuiMapControl.Map?.Layers.Add(Mapsui.Tiling.OpenStreetMap.CreateTileLayer());
         }
+
     }
 }
