@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.Windows.Controls;
-using System.Net.Http;
-using Newtonsoft.Json.Linq;
+﻿using System.Windows.Controls;
 
 namespace earthquake_finder.View.UserControls
 {
@@ -12,87 +9,28 @@ namespace earthquake_finder.View.UserControls
             InitializeComponent();
         }
 
-
         private void btnHour_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            GetEarthquakeData("all_hour.geojson");
+            Earthquake.GetEarthquakeData("all_hour.geojson");
+            Earthquake.CurrentFilter = Earthquake.Filter.Hour;
         }
 
         private void btnDay_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            GetEarthquakeData("all_day.geojson");
+            Earthquake.GetEarthquakeData("all_day.geojson");
+            Earthquake.CurrentFilter = Earthquake.Filter.Day;
         }
 
         private void btnWeek_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            GetEarthquakeData("all_week.geojson");
+            Earthquake.GetEarthquakeData("all_week.geojson");
+            Earthquake.CurrentFilter = Earthquake.Filter.Week;
         }
 
         private void btnMonth_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            GetEarthquakeData("all_month.geojson");
-        }
-
-        private static async void GetEarthquakeData(string filter)
-        {
-            string apiUrl = $"https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/{filter}";
-
-            try {
-            using (HttpClient client = new HttpClient())
-            {
-                using (HttpResponseMessage res = await client.GetAsync(apiUrl))
-                {
-                    using(HttpContent content = res.Content)
-                    {
-                        string data = await content.ReadAsStringAsync();
-
-                            if (data != null)
-                            {
-                                var parsedData = JObject.Parse(data)["features"];
-
-                                List<Earthquake> earthquakes = new List<Earthquake>();
-
-                                foreach (var item in parsedData)
-                                {
-                                    long time = (long)item["properties"]["time"];
-                                    double longitude = (double)item["geometry"]["coordinates"][0];
-                                    double latitude = (double)item["geometry"]["coordinates"][1];
-                                    float magnitude = (float)item["properties"]["mag"];
-
-                                    Earthquake earthquake = new Earthquake(time, longitude, latitude, magnitude);
-
-                                    earthquakes.Add(earthquake);
-                                }
-
-                                Trace.WriteLine(earthquakes.Count);
-                            }
-                            else
-                            {
-                                Trace.WriteLine("Empty response");
-                            }
-                        }
-                }
-            }
-            } catch(Exception exception)
-            {
-                Trace.WriteLine("Error calling api");
-                Trace.WriteLine(exception);
-            }
-        }
-
-        private class Earthquake
-        {
-            public Earthquake(long time , double longitude, double latitude, float magnitude)
-            {
-                Magnitude = magnitude;
-                Longitude = longitude;
-                Latitude = latitude;
-                Time = time;
-            }
-            public long Time { get; set; }
-            public double Longitude { get; set; }
-            public double Latitude { get; set; }
-            public float Magnitude { get; set; }
+            Earthquake.GetEarthquakeData("all_month.geojson");
+            Earthquake.CurrentFilter = Earthquake.Filter.Month;
         }
     }
 }
