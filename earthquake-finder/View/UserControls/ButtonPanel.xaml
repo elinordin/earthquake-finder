@@ -20,9 +20,9 @@
             </Style>
         </Grid.Resources>
 
-        <Button Grid.Column="0" Content="Past hour" Style="{StaticResource SelectedButton}"/>
-        <Button Grid.Column="1" Content="Past day"/>
-        <Button Grid.Column="2" Content="Past week"/>
-        <Button Grid.Column="3" Content="Past month"/>
+        <Button Name="btnHour" Grid.Column="0" Content="Past hour" Click="btnHour_Click"  Style="{StaticResource SelectedButton}"/>
+        <Button Name="btnDay" Grid.Column="1" Content="Past day" Click="btnDay_Click"/>
+        <Button Name="btnWeek" Grid.Column="2" Content="Past week" Click="btnWeek_Click"/>
+        <Button Name="btnMonth" Grid.Column="3" Content="Past month" Click="btnMonth_Click"/>
     </Grid>
 </UserControl>
