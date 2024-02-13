@@ -6,10 +6,11 @@ namespace earthquake_finder
     {
         public MainWindow()
         {
-            // sets the initial data to past hour
-            Earthquake.GetEarthquakeData(Earthquake.Filter.Hour);
-
             InitializeComponent();
+            DataContext = Global.Instance;
+
+            // sets the initial data to past hour
+            Global.Instance.GetEarthquakeData(Global.Filter.Hour);
         }
     }
 }

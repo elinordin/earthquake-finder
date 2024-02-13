@@ -1,43 +1,13 @@
 ﻿using Newtonsoft.Json.Linq;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 
 namespace earthquake_finder
 {
     class Earthquake
     {
-        // The current filter
-        public enum Filter
-        {
-            Hour,
-            Day,
-            Week,
-            Month
-        }
-
-        private static Filter currentFilter;
-
-        public static Filter CurrentFilter
-        {
-            get { return currentFilter; }
-            set
-            {
-                currentFilter = value;
-            }
-        }
-
-        // The current list of earthquakes
-        private static List<Earthquake> earthquakes = new List<Earthquake>();
-
-        public static List<Earthquake> Earthquakes
-        {
-            get { return earthquakes; }
-            set
-            {
-                earthquakes = value;
-            }
-        }
-
         public Earthquake(long time, double longitude, double latitude, float magnitude)
         {
             Magnitude = magnitude;
@@ -49,8 +19,64 @@ namespace earthquake_finder
         public double Longitude { get; set; }
         public double Latitude { get; set; }
         public float Magnitude { get; set; }
+    }
 
-        public static async void GetEarthquakeData(Filter filter)
+    class Global : INotifyPropertyChanged
+    {
+        private static Global instance;
+
+        public static Global Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new Global();
+                }
+                return instance;
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public enum Filter
+        {
+            Hour,
+            Day,
+            Week,
+            Month
+        }
+
+        private Filter currentFilter;
+
+        public Filter CurrentFilter
+        {
+            get { return currentFilter; }
+            set
+            {
+                currentFilter = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // The current list of earthquakes
+        private List<Earthquake> earthquakes = new List<Earthquake>();
+
+        public List<Earthquake> Earthquakes
+        {
+            get { return earthquakes; }
+            set
+            {
+                earthquakes = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private void OnPropertyChanged([CallerMemberName] string propName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+        }
+
+        public async void GetEarthquakeData(Filter filter)
         {
             string filterQuery = getFilterQuery(filter);
             string apiUrl = $"https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/{filterQuery}";
@@ -101,7 +127,7 @@ namespace earthquake_finder
             }
         }
 
-        private static string getFilterQuery(Filter filter)
+        private string getFilterQuery(Filter filter)
         {
             switch (filter)
             {

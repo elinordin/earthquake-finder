@@ -10,10 +10,18 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
             <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
 
         <userControls:Map Grid.Row="0"/>
-        <userControls:ButtonPanel Grid.Row="1" />
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10 2">
+            <TextBlock  Text="Total count: "/>
+            <TextBlock  Text="{Binding Earthquakes.Count}"/>
+            <TextBlock  Text=" , "/>
+            <TextBlock  Text="Current filter: "/>
+            <TextBlock  Text="{Binding CurrentFilter}"/>
+        </StackPanel>
+        <userControls:ButtonPanel Grid.Row="2" />
     </Grid>
 </Window>
