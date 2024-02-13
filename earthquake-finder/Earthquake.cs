@@ -50,9 +50,10 @@ namespace earthquake_finder
         public double Latitude { get; set; }
         public float Magnitude { get; set; }
 
-        public static async void GetEarthquakeData(string filter)
+        public static async void GetEarthquakeData(Filter filter)
         {
-            string apiUrl = $"https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/{filter}";
+            string filterQuery = getFilterQuery(filter);
+            string apiUrl = $"https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/{filterQuery}";
 
             try
             {
@@ -83,6 +84,7 @@ namespace earthquake_finder
                                 }
 
                                 Earthquakes = localEarthquakes;
+                                CurrentFilter = filter;
                             }
                             else
                             {
@@ -96,6 +98,23 @@ namespace earthquake_finder
             {
                 Trace.WriteLine("Error calling api");
                 Trace.WriteLine(exception);
+            }
+        }
+
+        private static string getFilterQuery(Filter filter)
+        {
+            switch (filter)
+            {
+                case Filter.Hour:
+                    return "all_hour.geojson";
+                case Filter.Day:
+                    return "all_day.geojson";
+                case Filter.Week:
+                    return "all_week.geojson";
+                case Filter.Month:
+                    return "all_month.geojson";
+                default:
+                    return "";
             }
         }
     }

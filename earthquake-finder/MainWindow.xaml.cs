@@ -7,8 +7,7 @@ namespace earthquake_finder
         public MainWindow()
         {
             // sets the initial data to past hour
-            Earthquake.GetEarthquakeData("all_hour.geojson");
-            Earthquake.CurrentFilter = Earthquake.Filter.Hour;
+            Earthquake.GetEarthquakeData(Earthquake.Filter.Hour);
 
             InitializeComponent();
         }
