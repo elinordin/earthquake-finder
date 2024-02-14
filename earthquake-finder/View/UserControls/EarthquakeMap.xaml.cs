@@ -24,7 +24,14 @@ namespace earthquake_finder.View.UserControls
 
         private void HandleGlobalPropertyChange(object sender, PropertyChangedEventArgs e)
         {
-            CreateMapAsync();
+            var polygonsLayer = mapsuiMapControl.Map.Layers.FirstOrDefault(layer => layer.Name == "Polygons");
+
+            if(polygonsLayer != null)
+            {
+                mapsuiMapControl.Map.Layers.Remove(polygonsLayer);
+            }
+
+            mapsuiMapControl.Map.Layers.Add(CreateLayer());
         }
 
         private Task<Map> CreateMapAsync()
