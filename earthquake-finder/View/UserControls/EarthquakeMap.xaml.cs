@@ -6,9 +6,7 @@ using Mapsui.Providers;
 using Mapsui.Styles;
 using Mapsui.Tiling;
 using NetTopologySuite.Geometries;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Windows.Controls;
 
 namespace earthquake_finder.View.UserControls
@@ -18,6 +16,14 @@ namespace earthquake_finder.View.UserControls
         public EarthquakeMap()
         {
             InitializeComponent();
+            DataContext = Global.Instance;
+            CreateMapAsync();
+
+            Global.Instance.PropertyChanged += HandleGlobalPropertyChange;
+        }
+
+        private void HandleGlobalPropertyChange(object sender, PropertyChangedEventArgs e)
+        {
             CreateMapAsync();
         }
 
@@ -53,23 +59,22 @@ namespace earthquake_finder.View.UserControls
         {
             var result = new List<Polygon>();
 
-            var latitude = 59.334591;
-            var longitude = 18.0632401;
-            var offset = 200000;
+            foreach(Earthquake earthquake in Global.Instance.Earthquakes) {
+                var center = SphericalMercator.FromLonLat(earthquake.Longitude, earthquake.Latitude);
+                var offset = 200000;
 
-            var center = SphericalMercator.FromLonLat(longitude, latitude);
+                var square = new Polygon(
+                    new LinearRing(new[] {
+                        new Coordinate(center.x + offset, center.y + offset), // top right
+                        new Coordinate(center.x - offset, center.y + offset), // top left
+                        new Coordinate(center.x - offset, center.y - offset), // bottom left
+                        new Coordinate(center.x + offset, center.y - offset), // bottom right
+                        new Coordinate(center.x + offset, center.y + offset) // top right
+                    })
+                );
 
-            var square = new Polygon(
-                new LinearRing(new[] {
-                    new Coordinate(center.x + offset, center.y + offset), // top right
-                    new Coordinate(center.x - offset, center.y + offset), // top left
-                    new Coordinate(center.x - offset, center.y - offset), // bottom left
-                    new Coordinate(center.x + offset, center.y - offset), // bottom right
-                    new Coordinate(center.x + offset, center.y + offset) // top right
-                })
-            );
-
-            result.Add(square);
+                result.Add(square);
+            }
 
             return result;
         }
