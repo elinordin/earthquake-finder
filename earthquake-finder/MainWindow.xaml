@@ -21,6 +21,9 @@
             <TextBlock  Text=" , "/>
             <TextBlock  Text="Current filter: "/>
             <TextBlock  Text="{Binding CurrentFilter}"/>
+            <TextBlock  Text=" , "/>
+            <TextBlock  Text="Refreshed at: "/>
+            <TextBlock  Text="{Binding UpdatedAt}"/>
         </StackPanel>
         <userControls:ButtonPanel Grid.Row="2" />
     </Grid>

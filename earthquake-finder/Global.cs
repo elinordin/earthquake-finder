@@ -58,7 +58,6 @@ namespace earthquake_finder
             }
         }
 
-        // The current list of earthquakes
         private List<Earthquake> earthquakes = new List<Earthquake>();
 
         public List<Earthquake> Earthquakes
@@ -67,6 +66,18 @@ namespace earthquake_finder
             set
             {
                 earthquakes = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string updatedAt;
+
+        public string UpdatedAt
+        {
+            get { return updatedAt; }
+            set
+            {
+                updatedAt = value;
                 OnPropertyChanged();
             }
         }
@@ -111,6 +122,7 @@ namespace earthquake_finder
 
                                 Earthquakes = localEarthquakes;
                                 CurrentFilter = filter;
+                                UpdatedAt = DateTime.Now.ToString();
                             }
                             else
                             {
