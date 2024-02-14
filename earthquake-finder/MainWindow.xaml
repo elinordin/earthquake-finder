@@ -4,9 +4,27 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:earthquake_finder"
+        xmlns:userControls="clr-namespace:earthquake_finder.View.UserControls"
         mc:Ignorable="d"
         Title="Earthquake finder" Height="450" Width="800">
     <Grid>
-        <TextBlock>Hello world</TextBlock>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="80"/>
+        </Grid.RowDefinitions>
+
+        <userControls:EarthquakeMap Grid.Row="0"/>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10 2">
+            <TextBlock  Text="Total count: "/>
+            <TextBlock  Text="{Binding Earthquakes.Count}"/>
+            <TextBlock  Text=" , "/>
+            <TextBlock  Text="Current filter: "/>
+            <TextBlock  Text="{Binding CurrentFilter}"/>
+            <TextBlock  Text=" , "/>
+            <TextBlock  Text="Refreshed at: "/>
+            <TextBlock  Text="{Binding UpdatedAt}"/>
+        </StackPanel>
+        <userControls:ButtonPanel Grid.Row="2" />
     </Grid>
 </Window>
