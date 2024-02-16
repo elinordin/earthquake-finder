@@ -18,6 +18,14 @@
             <Style TargetType="Grid">
                 <Setter Property="Margin" Value="10"/>
             </Style>
+
+            <Style TargetType="Button">
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+
+            <Style BasedOn="{StaticResource {x:Type Button}}"  TargetType="Button" x:Key="SelectedButton">
+                <Setter Property="Background" Value="DarkGray"/>
+            </Style>
         </Grid.Resources>
 
         <Button Name="btnHour" Grid.Column="0" Content="Past hour" Click="btnHour_Click"  Style="{StaticResource SelectedButton}"/>
