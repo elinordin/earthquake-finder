@@ -11,7 +11,7 @@
             <Style TargetType="Border" x:Key="InfoWrapper">
                 <Setter Property="Canvas.Right" Value="30"/>
                 <Setter Property="Canvas.Top" Value="30"/>
-                <Setter Property="Background" Value="#424563"/>
+                <Setter Property="Background" Value="#505376"/>
                 <Setter Property="Padding" Value="15 10"/>
                 <Setter Property="BorderBrush" Value="#373737"/>
                 <Setter Property="BorderThickness" Value="5"/>
