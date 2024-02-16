@@ -1,5 +1,7 @@
 ﻿using Mapsui;
+using Mapsui.Extensions;
 using Mapsui.Layers;
+using Mapsui.Limiting;
 using Mapsui.Nts.Extensions;
 using Mapsui.Projections;
 using Mapsui.Providers;
@@ -18,7 +20,6 @@ namespace earthquake_finder.View.UserControls
             InitializeComponent();
             DataContext = Global.Instance;
             CreateMapAsync();
-            SetMapBounderies();
 
             Global.Instance.PropertyChanged += HandleGlobalPropertyChange;
         }
@@ -35,24 +36,13 @@ namespace earthquake_finder.View.UserControls
             mapsuiMapControl.Map.Layers.Add(CreateLayer());
         }
 
-        private void SetMapBounderies()
-        {
-            // These settings gets rid of the white border, however the pan bounds now restrict being able to zoom outside of EU (bug that needs fixing)
-            var defaultMin = 0.14929107086948307;
-            mapsuiMapControl.Map.Navigator.OverrideZoomBounds = new MMinMax(defaultMin, 26000.0);
-
-            var leftAndRight = 100000.0;
-            var topAndBottom = 11070000.0;
-
-            mapsuiMapControl.Map.Navigator.OverridePanBounds = new MRect(-leftAndRight, -topAndBottom, leftAndRight, topAndBottom);
-        }
-        
         private Task<Map> CreateMapAsync()
         {
             var map = new Map();
             map.Layers.Add(OpenStreetMap.CreateTileLayer()); // Base layer
             map.Layers.Add(CreateLayer());
             mapsuiMapControl.Map = map;
+            mapsuiMapControl.Map.Navigator.Limiter = new ViewportLimiterKeepWithinExtent();
             return Task.FromResult(map);
         }
 
