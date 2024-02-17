@@ -27,24 +27,51 @@
             <Style  BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock" x:Key="InfoValue">
                 <Setter Property="FontWeight" Value="Regular"/>
             </Style>
+
+            <Style TargetType="Ellipse">
+                <Setter Property="Width" Value="20"/>
+                <Setter Property="Height" Value="20"/>
+                <Setter Property="Margin" Value="0 0 10 0"/>
+                <Setter Property="Stroke" Value="#373737"/>
+                <Setter Property="StrokeThickness" Value="3"/>
+            </Style>
         </Canvas.Resources>
 
         <Border Style="{StaticResource InfoWrapper}">
-        <StackPanel >
-            <StackPanel Orientation="Horizontal">
-                <TextBlock  Text="Refreshed at: "/>
-                <TextBlock  Text="{Binding UpdatedAt}" Style="{StaticResource InfoValue}"/>
+            <StackPanel >
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock  Text="Refreshed at: "/>
+                    <TextBlock  Text="{Binding UpdatedAt}" Style="{StaticResource InfoValue}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock  Text="Number of earthquakes: "/>
+                    <TextBlock  Text="{Binding Earthquakes.Count}" Style="{StaticResource InfoValue}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock  Text="Current filter: "/>
+                    <TextBlock  Text="{Binding CurrentFilter}" Style="{StaticResource InfoValue}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 15 0 0">
+                    <Ellipse Fill="#79A4b4"/>
+                    <TextBlock  Text="Small "/>
+                    <TextBlock  Text="4.5 -" Style="{StaticResource InfoValue}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Ellipse Fill="#F2D983"/>
+                    <TextBlock  Text="Medium "/>
+                    <TextBlock  Text="4.5 - 5.5" Style="{StaticResource InfoValue}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Ellipse Fill="#FFB627"/>
+                    <TextBlock  Text="Large "/>
+                    <TextBlock  Text="5.5 - 6.5" Style="{StaticResource InfoValue}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Ellipse Fill="#FF7A00"/>
+                    <TextBlock  Text="Extra large "/>
+                    <TextBlock  Text="6.5 +" Style="{StaticResource InfoValue}"/>
+                </StackPanel>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock  Text="Number of earthquakes: "/>
-                <TextBlock  Text="{Binding Earthquakes.Count}" Style="{StaticResource InfoValue}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock  Text="Current filter: "/>
-                <TextBlock  Text="{Binding CurrentFilter}" Style="{StaticResource InfoValue}"/>
-            </StackPanel>
-
-        </StackPanel>
         </Border>
     </Canvas>
 </UserControl>
