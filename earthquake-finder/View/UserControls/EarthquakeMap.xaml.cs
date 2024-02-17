@@ -33,60 +33,58 @@ namespace earthquake_finder.View.UserControls
                 mapsuiMapControl.Map.Layers.Remove(polygonsLayer);
             }
 
-            mapsuiMapControl.Map.Layers.Add(CreateLayer());
+            mapsuiMapControl.Map.Layers.Add(CreatePointsLayer());
         }
 
         private Task<Map> CreateMapAsync()
         {
             var map = new Map();
             map.Layers.Add(OpenStreetMap.CreateTileLayer()); // Base layer
-            map.Layers.Add(CreateLayer());
+            map.Layers.Add(CreatePointsLayer());
             mapsuiMapControl.Map = map;
             mapsuiMapControl.Map.Navigator.Limiter = new ViewportLimiterKeepWithinExtent();
             return Task.FromResult(map);
         }
 
-        private static ILayer CreateLayer()
+        private static ILayer CreatePointsLayer()
         {
-            return new Layer("Polygons")
+            return new MemoryLayer
             {
-                DataSource = new MemoryProvider(CreatePolygon().ToFeatures()),
-                Style = new VectorStyle
-                {
-                    Fill = new Brush(new Color(66, 69, 99, 150)),
-                    Outline = new Pen
-                    {
-                        Color = new Color(255, 182, 39, 150),
-                        Width = 2,
-                        PenStyle = PenStyle.Solid,
-                        PenStrokeCap = PenStrokeCap.Round
-                    }
-                }
+                Name = "Points",
+                Features = CreatePointFeatures(),
+                Style = CreatePointStyle()
             };
         }
 
-        private static List<Polygon> CreatePolygon()
+        private static List<IFeature> CreatePointFeatures()
         {
-            var result = new List<Polygon>();
+            var features = new List<IFeature>();
 
-            foreach(Earthquake earthquake in Global.Instance.Earthquakes) {
-                var center = SphericalMercator.FromLonLat(earthquake.Longitude, earthquake.Latitude);
-                var offset = 200000;
-
-                var square = new Polygon(
-                    new LinearRing(new[] {
-                        new Coordinate(center.x + offset, center.y + offset), // top right
-                        new Coordinate(center.x - offset, center.y + offset), // top left
-                        new Coordinate(center.x - offset, center.y - offset), // bottom left
-                        new Coordinate(center.x + offset, center.y - offset), // bottom right
-                        new Coordinate(center.x + offset, center.y + offset) // top right
-                    })
-                );
-
-                result.Add(square);
+            foreach (Earthquake earthquake in Global.Instance.Earthquakes)
+            {
+                var pointFeature = new PointFeature(SphericalMercator.FromLonLat(earthquake.Longitude, earthquake.Latitude).ToMPoint());
+                features.Add(pointFeature);
             }
 
-            return result;
+            return features;
+        }
+
+        private static IStyle CreatePointStyle()
+        {
+            var lightBlue = new Color(80, 83, 118);
+            var orange = new Color(255, 182, 39);
+
+            return new SymbolStyle
+            {
+                SymbolScale = 0.5,
+                SymbolOffset = new Offset(0, 0),
+                Fill = new Brush(orange), 
+                Outline = new Pen
+                {
+                    Color = lightBlue,
+                    Width = 5
+                }
+            };
         }
     }
 }
