@@ -7,6 +7,7 @@ namespace earthquake_finder.View.UserControls
         public ButtonPanel()
         {
             InitializeComponent();
+            DataContext = Global.Instance;
         }
 
         private void btnHour_Click(object sender, System.Windows.RoutedEventArgs e)

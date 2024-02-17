@@ -6,7 +6,54 @@
              xmlns:userControls="clr-namespace:earthquake_finder.View.UserControls"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="800">
+    <Border BorderBrush="#373737" BorderThickness="0 1 0 0">
     <Grid Margin="5">
+        <Grid.Resources>
+            <Style TargetType="Grid">
+                <Setter Property="Margin" Value="10"/>
+            </Style>
+
+            <Style TargetType="Button">
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="Background" Value="#505376"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="16"/>
+            </Style>
+
+            <!--These could be refactored to be more DRY, but for now this was more straight forward-->
+            <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button" x:Key="HourConditional">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding CurrentFilter}" Value="Hour">
+                        <Setter Property="Background" Value="#373737"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button" x:Key="DayConditional">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding CurrentFilter}" Value="Day">
+                        <Setter Property="Background" Value="#373737"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            
+            <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button" x:Key="WeekConditional">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding CurrentFilter}" Value="Week">
+                        <Setter Property="Background" Value="#373737"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button" x:Key="MonthConditional">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding CurrentFilter}" Value="Month">
+                        <Setter Property="Background" Value="#373737"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Resources>
+
         <Grid.ColumnDefinitions >
             <ColumnDefinition />
             <ColumnDefinition />
@@ -14,15 +61,10 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <Grid.Resources>
-            <Style TargetType="Grid">
-                <Setter Property="Margin" Value="10"/>
-            </Style>
-        </Grid.Resources>
-
-        <Button Name="btnHour" Grid.Column="0" Content="Past hour" Click="btnHour_Click"  Style="{StaticResource SelectedButton}"/>
-        <Button Name="btnDay" Grid.Column="1" Content="Past day" Click="btnDay_Click"/>
-        <Button Name="btnWeek" Grid.Column="2" Content="Past week" Click="btnWeek_Click"/>
-        <Button Name="btnMonth" Grid.Column="3" Content="Past month" Click="btnMonth_Click"/>
+        <Button Grid.Column="0" Name="btnHour" Content="Past hour" Click="btnHour_Click" Style="{StaticResource HourConditional}"/>
+        <Button Grid.Column="1" Name="btnDay" Content="Past day" Click="btnDay_Click" Style="{StaticResource DayConditional}"/>
+        <Button Grid.Column="2" Name="btnWeek" Content="Past week" Click="btnWeek_Click" Style="{StaticResource WeekConditional}"/>
+        <Button Grid.Column="3" Name="btnMonth" Content="Past month" Click="btnMonth_Click" Style="{StaticResource MonthConditional}"/>
     </Grid>
+    </Border>
 </UserControl>

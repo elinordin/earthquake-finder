@@ -1,11 +1,11 @@
 ﻿using Mapsui;
+using Mapsui.Extensions;
 using Mapsui.Layers;
+using Mapsui.Limiting;
 using Mapsui.Nts.Extensions;
 using Mapsui.Projections;
-using Mapsui.Providers;
 using Mapsui.Styles;
 using Mapsui.Tiling;
-using NetTopologySuite.Geometries;
 using System.ComponentModel;
 using System.Windows.Controls;
 
@@ -24,59 +24,98 @@ namespace earthquake_finder.View.UserControls
 
         private void HandleGlobalPropertyChange(object sender, PropertyChangedEventArgs e)
         {
-            CreateMapAsync();
+            var pointsLayer = mapsuiMapControl.Map.Layers.FirstOrDefault(layer => layer.Name == "Points");
+
+            if(pointsLayer != null)
+            {
+                mapsuiMapControl.Map.Layers.Remove(pointsLayer);
+            }
+
+            mapsuiMapControl.Map.Layers.Add(CreatePointsLayer());
         }
 
         private Task<Map> CreateMapAsync()
         {
             var map = new Map();
             map.Layers.Add(OpenStreetMap.CreateTileLayer()); // Base layer
-            map.Layers.Add(CreateLayer());
+            map.Layers.Add(CreatePointsLayer());
             mapsuiMapControl.Map = map;
+            mapsuiMapControl.Map.Navigator.Limiter = new ViewportLimiterKeepWithinExtent();
             return Task.FromResult(map);
         }
 
-        private static ILayer CreateLayer()
+        private static ILayer CreatePointsLayer()
         {
-            return new Layer("Polygons")
+            return new MemoryLayer
             {
-                DataSource = new MemoryProvider(CreatePolygon().ToFeatures()),
-                Style = new VectorStyle
-                {
-                    Fill = new Brush(new Color(66, 69, 99, 150)),
-                    Outline = new Pen
-                    {
-                        Color = new Color(255, 182, 39, 150),
-                        Width = 2,
-                        PenStyle = PenStyle.Solid,
-                        PenStrokeCap = PenStrokeCap.Round
-                    }
-                }
+                Name = "Points",
+                Features = CreatePointFeatures(),
+                Style = DefaultStyle(),
             };
         }
 
-        private static List<Polygon> CreatePolygon()
+        private static List<IFeature> CreatePointFeatures()
         {
-            var result = new List<Polygon>();
+            var features = new List<IFeature>();
 
-            foreach(Earthquake earthquake in Global.Instance.Earthquakes) {
-                var center = SphericalMercator.FromLonLat(earthquake.Longitude, earthquake.Latitude);
-                var offset = 200000;
+            foreach (Earthquake earthquake in Global.Instance.Earthquakes)
+            {
+                var point = SphericalMercator.FromLonLat(earthquake.Longitude, earthquake.Latitude).ToMPoint();
 
-                var square = new Polygon(
-                    new LinearRing(new[] {
-                        new Coordinate(center.x + offset, center.y + offset), // top right
-                        new Coordinate(center.x - offset, center.y + offset), // top left
-                        new Coordinate(center.x - offset, center.y - offset), // bottom left
-                        new Coordinate(center.x + offset, center.y - offset), // bottom right
-                        new Coordinate(center.x + offset, center.y + offset) // top right
-                    })
-                );
+                var pointFeature = new PointFeature(point)
+                { 
+                    Styles = new List<IStyle>([CreatePointStyle(earthquake)])
+                };
 
-                result.Add(square);
+                features.Add(pointFeature);
             }
 
-            return result;
+            return features;
+        }
+
+        private static SymbolStyle DefaultStyle()
+        {
+            return new SymbolStyle
+            {
+                SymbolScale = 0.5, // Custom styles are made on top of this one, so without setting it smaller there will be a white padding around the point
+            };
+        }
+
+        private static SymbolStyle CreatePointStyle(Earthquake earthquake)
+        {
+            var darkGrey = new Color(55, 55, 55);
+            var lightBlue = new Color(121, 164, 180);
+            var lightYellow = new Color(242, 217, 131);
+            var lightOrange = new Color(255, 182, 39);
+            var orange = new Color(255, 122, 0);
+
+            Color vectorFill;
+
+            if (earthquake.Magnitude < 4.5) 
+            {
+                vectorFill = lightBlue; // small
+            } else if (earthquake.Magnitude < 5.5) 
+            {
+                vectorFill = lightYellow; // medium
+            } else if(earthquake.Magnitude < 6.5) 
+            {
+                vectorFill = lightOrange; // larger
+            } else
+            {
+                vectorFill = orange; // large
+            }
+
+            return new SymbolStyle
+            {
+                SymbolScale = 0.5,
+                SymbolOffset = new Offset(0, 0),
+                Fill = new Brush(vectorFill),
+                Outline = new Pen
+                {
+                    Color = darkGrey,
+                    Width = 5
+                }
+            };
         }
     }
 }

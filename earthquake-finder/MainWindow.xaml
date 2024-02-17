@@ -10,21 +10,11 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="20"/>
             <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
 
         <userControls:EarthquakeMap Grid.Row="0"/>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10 2">
-            <TextBlock  Text="Total count: "/>
-            <TextBlock  Text="{Binding Earthquakes.Count}"/>
-            <TextBlock  Text=" , "/>
-            <TextBlock  Text="Current filter: "/>
-            <TextBlock  Text="{Binding CurrentFilter}"/>
-            <TextBlock  Text=" , "/>
-            <TextBlock  Text="Refreshed at: "/>
-            <TextBlock  Text="{Binding UpdatedAt}"/>
-        </StackPanel>
-        <userControls:ButtonPanel Grid.Row="2" />
+        <userControls:ButtonPanel Grid.Row="1" />
+        <userControls:InfoPanel />
     </Grid>
 </Window>

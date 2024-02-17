@@ -8,7 +8,8 @@ namespace earthquake_finder
 {
     class Earthquake
     {
-        public Earthquake(long time, double longitude, double latitude, float magnitude)
+        public Earthquake(long time, double longitude, double latitude, float? magnitude )
+
         {
             Magnitude = magnitude;
             Longitude = longitude;
@@ -18,7 +19,7 @@ namespace earthquake_finder
         public long Time { get; set; }
         public double Longitude { get; set; }
         public double Latitude { get; set; }
-        public float Magnitude { get; set; }
+        public float? Magnitude { get; set; }
     }
 
     class Global : INotifyPropertyChanged
@@ -113,7 +114,22 @@ namespace earthquake_finder
                                     long time = (long)item["properties"]["time"];
                                     double longitude = (double)item["geometry"]["coordinates"][0];
                                     double latitude = (double)item["geometry"]["coordinates"][1];
-                                    float magnitude = (float)item["properties"]["mag"];
+                                    float? magnitude;
+
+                                    object mag = item["properties"]["mag"];
+                                    
+
+                                    if (float.TryParse(mag.ToString(), out float result))
+                                    {
+                                        magnitude = result;
+                                    }
+                                    else
+                                    {
+                                        magnitude = null;
+                                    }
+ 
+
+
 
                                     Earthquake earthquake = new Earthquake(time, longitude, latitude, magnitude);
 
