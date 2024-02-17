@@ -4,10 +4,8 @@ using Mapsui.Layers;
 using Mapsui.Limiting;
 using Mapsui.Nts.Extensions;
 using Mapsui.Projections;
-using Mapsui.Providers;
 using Mapsui.Styles;
 using Mapsui.Tiling;
-using NetTopologySuite.Geometries;
 using System.ComponentModel;
 using System.Windows.Controls;
 
@@ -26,11 +24,11 @@ namespace earthquake_finder.View.UserControls
 
         private void HandleGlobalPropertyChange(object sender, PropertyChangedEventArgs e)
         {
-            var polygonsLayer = mapsuiMapControl.Map.Layers.FirstOrDefault(layer => layer.Name == "Polygons");
+            var pointsLayer = mapsuiMapControl.Map.Layers.FirstOrDefault(layer => layer.Name == "Points");
 
-            if(polygonsLayer != null)
+            if(pointsLayer != null)
             {
-                mapsuiMapControl.Map.Layers.Remove(polygonsLayer);
+                mapsuiMapControl.Map.Layers.Remove(pointsLayer);
             }
 
             mapsuiMapControl.Map.Layers.Add(CreatePointsLayer());
@@ -52,7 +50,7 @@ namespace earthquake_finder.View.UserControls
             {
                 Name = "Points",
                 Features = CreatePointFeatures(),
-                Style = CreatePointStyle()
+                Style = DefaultStyle(),
             };
         }
 
@@ -62,26 +60,59 @@ namespace earthquake_finder.View.UserControls
 
             foreach (Earthquake earthquake in Global.Instance.Earthquakes)
             {
-                var pointFeature = new PointFeature(SphericalMercator.FromLonLat(earthquake.Longitude, earthquake.Latitude).ToMPoint());
+                var point = SphericalMercator.FromLonLat(earthquake.Longitude, earthquake.Latitude).ToMPoint();
+
+                var pointFeature = new PointFeature(point)
+                { 
+                    Styles = new List<IStyle>([CreatePointStyle(earthquake)])
+                };
+
                 features.Add(pointFeature);
             }
 
             return features;
         }
 
-        private static IStyle CreatePointStyle()
+        private static SymbolStyle DefaultStyle()
         {
-            var lightBlue = new Color(80, 83, 118);
-            var orange = new Color(255, 182, 39);
+            return new SymbolStyle
+            {
+                SymbolScale = 0.5, // Custom styles are made on top of this one, so without setting it smaller there will be a white padding around the point
+            };
+        }
+
+        private static SymbolStyle CreatePointStyle(Earthquake earthquake)
+        {
+            var darkGrey = new Color(55, 55, 55);
+            var lightBlue = new Color(121, 164, 180);
+            var lightYellow = new Color(242, 217, 131);
+            var lightOrange = new Color(255, 182, 39);
+            var orange = new Color(255, 122, 0);
+
+            Color vectorFill;
+
+            if (earthquake.Magnitude < 4.5) 
+            {
+                vectorFill = lightBlue; // small
+            } else if (earthquake.Magnitude < 5.5) 
+            {
+                vectorFill = lightYellow; // medium
+            } else if(earthquake.Magnitude < 6.5) 
+            {
+                vectorFill = lightOrange; // larger
+            } else
+            {
+                vectorFill = orange; // large
+            }
 
             return new SymbolStyle
             {
                 SymbolScale = 0.5,
                 SymbolOffset = new Offset(0, 0),
-                Fill = new Brush(orange), 
+                Fill = new Brush(vectorFill),
                 Outline = new Pen
                 {
-                    Color = lightBlue,
+                    Color = darkGrey,
                     Width = 5
                 }
             };
