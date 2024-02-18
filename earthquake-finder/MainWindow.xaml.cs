@@ -11,16 +11,20 @@ namespace earthquake_finder
             DataContext = Global.Instance;
 
             FetchInitialEarthquakeData();
-
-            DispatcherTimer timer = new DispatcherTimer();
-            timer.Tick += new EventHandler(RefreshEarthquakeData);
-            timer.Interval = new TimeSpan(0, 5, 0); // hours, minutes, second
-            timer.Start();
+            SetupDataRefreshTimer();
         }
 
         private async void FetchInitialEarthquakeData()
         {
             await Global.Instance.GetEarthquakeData(Global.Filter.Hour);
+        }
+
+        private void SetupDataRefreshTimer()
+        {
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Tick += new EventHandler(RefreshEarthquakeData);
+            timer.Interval = new TimeSpan(0, 5, 0); // hours, minutes, second
+            timer.Start();
         }
 
         private async void RefreshEarthquakeData (object sender, EventArgs e)
