@@ -10,8 +10,7 @@ namespace earthquake_finder
             InitializeComponent();
             DataContext = Global.Instance;
 
-            // sets the initial data to past hour
-            Global.Instance.GetEarthquakeData(Global.Filter.Hour);
+            FetchInitialEarthquakeData();
 
             DispatcherTimer timer = new DispatcherTimer();
             timer.Tick += new EventHandler(RefreshEarthquakeData);
@@ -19,9 +18,14 @@ namespace earthquake_finder
             timer.Start();
         }
 
-        private void RefreshEarthquakeData (object sender, EventArgs e)
+        private async void FetchInitialEarthquakeData()
         {
-            Global.Instance.GetEarthquakeData(Global.Instance.CurrentFilter);
+            await Global.Instance.GetEarthquakeData(Global.Filter.Hour);
+        }
+
+        private async void RefreshEarthquakeData (object sender, EventArgs e)
+        {
+            await Global.Instance.GetEarthquakeData(Global.Instance.CurrentFilter);
         }
     }
 }

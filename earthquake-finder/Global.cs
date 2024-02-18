@@ -88,7 +88,7 @@ namespace earthquake_finder
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
-        public async void GetEarthquakeData(Filter filter)
+        public async Task GetEarthquakeData(Filter filter)
         {
             string filterQuery = getFilterQuery(filter);
             string apiUrl = $"https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/{filterQuery}";
