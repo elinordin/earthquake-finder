@@ -84,6 +84,18 @@ namespace earthquake_finder
             }
         }
 
+        private bool isEarthquakesLoading;
+
+        public bool IsEarthquakesLoading
+        {
+            get { return isEarthquakesLoading; }
+            set
+            {
+                isEarthquakesLoading = value;
+                OnPropertyChanged();
+            }
+        }
+
         private void OnPropertyChanged([CallerMemberName] string propName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
@@ -93,6 +105,8 @@ namespace earthquake_finder
         {
             string filterQuery = getFilterQuery(filter);
             string apiUrl = $"https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/{filterQuery}";
+            
+            IsEarthquakesLoading = true;
 
             try
             {
@@ -153,6 +167,8 @@ namespace earthquake_finder
             {
                 MessageBox.Show($"Failed to fetch earthquake data: {exception.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
+            IsEarthquakesLoading = false;
         }
 
         private string getFilterQuery(Filter filter)
