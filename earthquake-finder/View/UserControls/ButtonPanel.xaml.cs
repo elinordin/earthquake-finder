@@ -10,24 +10,24 @@ namespace earthquake_finder.View.UserControls
             DataContext = Global.Instance;
         }
 
-        private void btnHour_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async void btnHour_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            Global.Instance.GetEarthquakeData(Global.Filter.Hour);
+            await Global.Instance.GetEarthquakeData(Global.Filter.Hour);
         }
 
-        private void btnDay_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async void btnDay_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            Global.Instance.GetEarthquakeData(Global.Filter.Day);
+            await Global.Instance.GetEarthquakeData(Global.Filter.Day);
         }
 
-        private void btnWeek_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async void btnWeek_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            Global.Instance.GetEarthquakeData(Global.Filter.Week);
+            await Global.Instance.GetEarthquakeData(Global.Filter.Week);
         }
 
-        private void btnMonth_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async void btnMonth_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            Global.Instance.GetEarthquakeData(Global.Filter.Month);
+            await Global.Instance.GetEarthquakeData(Global.Filter.Month);
         }
     }
 }

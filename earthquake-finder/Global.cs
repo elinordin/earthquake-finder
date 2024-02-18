@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace earthquake_finder
 {
@@ -83,15 +84,29 @@ namespace earthquake_finder
             }
         }
 
+        private bool isEarthquakesLoading;
+
+        public bool IsEarthquakesLoading
+        {
+            get { return isEarthquakesLoading; }
+            set
+            {
+                isEarthquakesLoading = value;
+                OnPropertyChanged();
+            }
+        }
+
         private void OnPropertyChanged([CallerMemberName] string propName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
-        public async void GetEarthquakeData(Filter filter)
+        public async Task GetEarthquakeData(Filter filter)
         {
             string filterQuery = getFilterQuery(filter);
             string apiUrl = $"https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/{filterQuery}";
+            
+            IsEarthquakesLoading = true;
 
             try
             {
@@ -117,7 +132,7 @@ namespace earthquake_finder
                                     float? magnitude;
 
                                     object mag = item["properties"]["mag"];
-                                    
+
 
                                     if (float.TryParse(mag.ToString(), out float result))
                                     {
@@ -127,7 +142,7 @@ namespace earthquake_finder
                                     {
                                         magnitude = null;
                                     }
- 
+
 
 
 
@@ -150,9 +165,10 @@ namespace earthquake_finder
             }
             catch (Exception exception)
             {
-                Trace.WriteLine("Error calling api");
-                Trace.WriteLine(exception);
+                MessageBox.Show($"Failed to fetch earthquake data: {exception.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
+            IsEarthquakesLoading = false;
         }
 
         private string getFilterQuery(Filter filter)

@@ -2,11 +2,12 @@
 
 namespace earthquake_finder.View.UserControls
 {
-    public partial class InfoPanel : UserControl
+    public partial class Loader : UserControl
     {
-        public InfoPanel()
+        public Loader()
         {
             InitializeComponent();
+            DataContext = Global.Instance;
         }
     }
 }

@@ -16,5 +16,6 @@
         <userControls:EarthquakeMap Grid.Row="0"/>
         <userControls:ButtonPanel Grid.Row="1" />
         <userControls:InfoPanel />
+        <userControls:Loader />
     </Grid>
 </Window>
