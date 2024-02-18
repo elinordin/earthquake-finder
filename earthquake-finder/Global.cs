@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace earthquake_finder
 {
@@ -117,7 +118,7 @@ namespace earthquake_finder
                                     float? magnitude;
 
                                     object mag = item["properties"]["mag"];
-                                    
+
 
                                     if (float.TryParse(mag.ToString(), out float result))
                                     {
@@ -127,7 +128,7 @@ namespace earthquake_finder
                                     {
                                         magnitude = null;
                                     }
- 
+
 
 
 
@@ -150,8 +151,7 @@ namespace earthquake_finder
             }
             catch (Exception exception)
             {
-                Trace.WriteLine("Error calling api");
-                Trace.WriteLine(exception);
+                MessageBox.Show($"Failed to fetch earthquake data: {exception.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
