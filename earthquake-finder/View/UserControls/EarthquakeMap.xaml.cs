@@ -62,41 +62,47 @@ namespace earthquake_finder.View.UserControls
         private static SymbolStyle CreatePointStyle(Earthquake earthquake)
         {
             var darkGrey = new Color(55, 55, 55);
-            var lightBlue = new Color(121, 164, 180);
-            var lightYellow = new Color(242, 217, 131);
-            var lightOrange = new Color(255, 182, 39);
-            var orange = new Color(255, 122, 0);
-
-            Color vectorFill;
-
-            if (earthquake.Magnitude < 4.5)
-            {
-                vectorFill = lightBlue; // small
-            }
-            else if (earthquake.Magnitude < 5.5)
-            {
-                vectorFill = lightYellow; // medium
-            }
-            else if (earthquake.Magnitude < 6.5)
-            {
-                vectorFill = lightOrange; // larger
-            }
-            else
-            {
-                vectorFill = orange; // large
-            }
 
             return new SymbolStyle
             {
                 SymbolScale = 0.5,
                 SymbolOffset = new Offset(0, 0),
-                Fill = new Brush(vectorFill),
+                Fill = new Brush(GetColorFromMagnitude(earthquake.Magnitude)),
                 Outline = new Pen
                 {
                     Color = darkGrey,
                     Width = 5
                 }
             };
+        }
+
+        private static Color GetColorFromMagnitude (float? magnitude)
+        {
+            var lightBlue = new Color(121, 164, 180);
+            var lightYellow = new Color(242, 217, 131);
+            var lightOrange = new Color(255, 182, 39);
+            var orange = new Color(255, 122, 0);
+
+            Color colorFill;
+
+            if (magnitude < 4.5)
+            {
+                colorFill = lightBlue; // small
+            }
+            else if (magnitude < 5.5)
+            {
+                colorFill = lightYellow; // medium
+            }
+            else if (magnitude < 6.5)
+            {
+                colorFill = lightOrange; // larger
+            }
+            else
+            {
+                colorFill = orange; // large
+            }
+
+            return colorFill;
         }
     }
 
